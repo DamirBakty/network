@@ -42,6 +42,8 @@ class UserServiceV1:
 
     def generate_token(self, data: OrderedDict, request):
         user = self.user_repos.authenticate_user(data=data, request=request)
+        if not user:
+            return "Incorrect email or password"
         access_token = AccessToken.for_user(user)
         refresh_token = RefreshToken.for_user(user)
         data = {
