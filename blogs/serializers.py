@@ -21,7 +21,7 @@ class PostAudioSerializer(serializers.ModelSerializer):
         model = models.PostVideo
         fields = ('id', 'video')
 
-class PostSerializer(serializers.ModelSerializer):
+class PostListSerializer(serializers.ModelSerializer):
     post_images = PostImageSerializer(many=True, required=False)
     post_audios = PostAudioSerializer(many=True, required=False)
     post_videos = PostVideoSerializer(many=True, required=False)
@@ -29,11 +29,24 @@ class PostSerializer(serializers.ModelSerializer):
     author_name = serializers.SerializerMethodField()
     likes_count = serializers.IntegerField()
     comments_count = serializers.IntegerField()
+    liked = serializers.SerializerMethodField()
 
     class Meta:
         model = models.Post
-        fields = ('id', 'title', 'text', 'updated_at', 'post_images', 'post_videos', 'post_audios', 'yours', 'author_name', 'likes_count', 'comments_count')
-
+        fields = (
+            'id',
+            'title',
+            'text',
+            'updated_at',
+            'post_images',
+            'post_videos',
+            'post_audios',
+            'yours',
+            'author_name',
+            'likes_count',
+            'comments_count',
+            'liked'
+        )
 
     def get_yours(self, obj):
         user = None
@@ -45,8 +58,25 @@ class PostSerializer(serializers.ModelSerializer):
     def get_author_name(self, obj):
         return str(obj.user)
 
+    def get_liked(self, obj):
+        user = None
+        request = self.context.get("request")
+        if request and hasattr(request, "user"):
+            user = request.user
+        liked = models.PostLike.objects.filter(post=obj, user=user)
+        return True if liked else False
+
+
+class ImageCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.PostImage
+        fields = ('image',)
+
 
 class PostCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Post
         fields = ('title', 'text')
+
+
+

@@ -50,6 +50,7 @@ INSTALLED_APPS = [
 
     'django_cleanup.apps.CleanupConfig',
     'rest_framework_simplejwt',
+    'debug_toolbar',
 
     'users',
     'blogs',
@@ -61,6 +62,7 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -151,7 +153,7 @@ TIME_ZONE = 'Asia/Almaty'
 USE_I18N = True
 
 USE_TZ = True
-
+INTERNAL_IPS = ['127.0.0.1']
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
