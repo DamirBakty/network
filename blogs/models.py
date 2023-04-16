@@ -100,11 +100,11 @@ class PostLike(models.Model):
 
 
 class CommentLike(models.Model):
-    post = models.ForeignKey(
-        to=Post,
+    comment = models.ForeignKey(
+        to=Comment,
         on_delete=models.CASCADE,
         related_name='comment_likes',
-        verbose_name='Post'
+        verbose_name='Comment'
     )
     user = models.ForeignKey(
         to=get_user_model(),
