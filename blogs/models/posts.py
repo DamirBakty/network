@@ -1,6 +1,6 @@
-from django.db import models
-# Create your models here.
 from django.contrib.auth import get_user_model
+from django.db import models
+
 
 class Post(models.Model):
     title = models.CharField(max_length=255, verbose_name='Title')
@@ -18,24 +18,6 @@ class Post(models.Model):
 
     def __str__(self):
         return f'ID: {self.id} Title: {self.title}'
-
-
-class Comment(models.Model):
-    text = models.TextField(verbose_name='Text')
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    post = models.ForeignKey(
-        to=Post,
-        on_delete=models.CASCADE,
-        related_name='post_comments',
-        verbose_name='Post'
-    )
-    user = models.ForeignKey(
-        to=get_user_model(),
-        on_delete=models.CASCADE,
-        verbose_name='Author'
-    )
 
 
 class PostImage(models.Model):
@@ -69,6 +51,7 @@ class PostVideo(models.Model):
 
     video = models.FileField(upload_to='post/videos', max_length=255)
 
+
 class PostAudio(models.Model):
     post = models.ForeignKey(
         to=Post,
@@ -99,20 +82,6 @@ class PostLike(models.Model):
     )
 
 
-class CommentLike(models.Model):
-    comment = models.ForeignKey(
-        to=Comment,
-        on_delete=models.CASCADE,
-        related_name='comment_likes',
-        verbose_name='Comment'
-    )
-    user = models.ForeignKey(
-        to=get_user_model(),
-        on_delete=models.CASCADE,
-        verbose_name='Author'
-    )
-
-
 class Postmark(models.Model):
     post = models.ForeignKey(
         to=Post,
@@ -128,5 +97,3 @@ class Postmark(models.Model):
     )
 
     created_at = models.DateTimeField(auto_now_add=True)
-
-

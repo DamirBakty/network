@@ -52,6 +52,7 @@ class UserServiceV1:
         }
         return data
 
+
     @staticmethod
     def _send_message_to_email(email: str, token, uid):
         data = {

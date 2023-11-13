@@ -49,7 +49,7 @@ class User(AbstractUser):
     email = models.EmailField(unique=True)
 
     def __str__(self):
-        return f'{self.email}'
+        return self.username
 
     EMAIL_FIELD = 'email'
     USERNAME_FIELD = 'email'
