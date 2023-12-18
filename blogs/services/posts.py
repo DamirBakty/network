@@ -1,7 +1,11 @@
+import logging
 from typing import Protocol, OrderedDict
 
 from blogs.repos.posts import PostListCreateReposInterface, PostListCreateReposV1, PostGetUpdateDeleteReposInterface, \
     PostGetUpdateDeleteReposV1
+
+
+logger = logging.getLogger(__name__)
 
 
 class PostListCreateServiceInterface(Protocol):
@@ -35,6 +39,8 @@ class PostGetUpdateDeleteServiceV1:
         return self.post_repos.get_post(pk=pk, user=user)
 
     def like_post(self, post_id, user):
+        logger.debug(f'Post with id {post_id} is liked')
+
         return self.post_repos.like_post(post_id=post_id, user=user)
 
     def mark_post(self, post_id, user):

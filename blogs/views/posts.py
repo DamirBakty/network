@@ -1,5 +1,5 @@
 import collections
-
+from django.utils.translation import gettext as _
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import generics, status, permissions
 from rest_framework.response import Response

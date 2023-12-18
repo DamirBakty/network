@@ -68,8 +68,11 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'network.middleware.HttpAPIMiddleware',
+    'network.middleware.SecondMiddleware',
 ]
 
 ROOT_URLCONF = 'network.urls'
@@ -169,6 +172,11 @@ USE_I18N = True
 USE_TZ = True
 INTERNAL_IPS = ['127.0.0.1']
 
+LOCALE_PATHS = (
+    BASE_DIR / 'locale',
+)
+
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
@@ -210,12 +218,22 @@ EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
+    "formatters": {
+        "verbose": {
+            "format": "{levelname} {asctime} {module} {process:d} {thread:d} {message}",
+            "style": "{",
+        }
+    },
     'handlers': {
         'file': {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
             'filename': 'sql.log',
         },
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose'
+        }
     },
     'loggers': {
         'django.db.backends': {
@@ -223,5 +241,10 @@ LOGGING = {
             'level': 'DEBUG',
             'propagate': False,
         },
+        'blogs': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': False
+        }
     },
 }
