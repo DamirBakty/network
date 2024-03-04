@@ -29,12 +29,16 @@ SECRET_KEY = 'django-insecure-j*rh)zgfwd_f4l!4np%-8kke9^9!a&k0f=a47lwf9i7-)crm%w
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
 
+ASGI_APPLICATION = "network.asgi.application"
+
 INSTALLED_APPS = [
+    'daphne',
+    'channels',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -42,7 +46,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'drf_yasg',
-
     'corsheaders',
     'rest_framework',
 
@@ -50,8 +53,10 @@ INSTALLED_APPS = [
 
     'django_cleanup.apps.CleanupConfig',
     'rest_framework_simplejwt',
+    'debug_toolbar',
 
     'users',
+    'chat',
     'blogs',
     'djoser'
 ]
@@ -61,9 +66,13 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'network.middleware.HttpAPIMiddleware',
+    'network.middleware.SecondMiddleware',
 ]
 
 ROOT_URLCONF = 'network.urls'
@@ -141,6 +150,16 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("127.0.0.1", 6379)],
+        },
+    },
+}
+
+
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
 
@@ -151,6 +170,11 @@ TIME_ZONE = 'Asia/Almaty'
 USE_I18N = True
 
 USE_TZ = True
+INTERNAL_IPS = ['127.0.0.1']
+
+LOCALE_PATHS = (
+    BASE_DIR / 'locale',
+)
 
 
 # Static files (CSS, JavaScript, Images)
@@ -189,3 +213,38 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    "formatters": {
+        "verbose": {
+            "format": "{levelname} {asctime} {module} {process:d} {thread:d} {message}",
+            "style": "{",
+        }
+    },
+    'handlers': {
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': 'sql.log',
+        },
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose'
+        }
+    },
+    'loggers': {
+        'django.db.backends': {
+            'handlers': ['file'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+        'blogs': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': False
+        }
+    },
+}

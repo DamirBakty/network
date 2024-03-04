@@ -1,12 +1,13 @@
 from django.contrib import admin
-from . import models
+from blogs.models.comments import Comment, CommentLike
+from blogs.models.posts import Post, PostImage, PostAudio, PostVideo, PostLike, Postmark
 
 # Register your models here.
-admin.site.register(models.Post)
-admin.site.register(models.Comment)
-admin.site.register(models.PostImage)
-admin.site.register(models.PostAudio)
-admin.site.register(models.PostVideo)
-admin.site.register(models.PostLike)
-admin.site.register(models.CommentLike)
-admin.site.register(models.Postmark)
+admin.site.register(Post)
+admin.site.register(Comment)
+admin.site.register(PostImage)
+admin.site.register(PostAudio)
+admin.site.register(PostVideo)
+admin.site.register(PostLike)
+admin.site.register(CommentLike)
+admin.site.register(Postmark)
